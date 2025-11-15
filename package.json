@@ -1,0 +1,26 @@
+{
+  "name": "queuectl",
+  "version": "1.0.0",
+  "description": "A CLI background job queue system",
+  "bin": {
+    "queuectl": "./queuectl.js"
+  },
+ 
+  "scripts": {
+    "test": "echo \"See test_flow.sh\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "queue",
+    "worker"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^12.1.0",
+    "dotenv": "^17.2.3",
+    "fs-extra": "^11.2.0",
+    "mongoose": "^8.4.3"
+  }
+}
