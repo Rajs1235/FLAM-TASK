@@ -1,6 +1,4 @@
-Here is your `README.md` file, edited to show the CLI commands in a table format as you requested. I've also cleaned up some of the spacing and formatting (like the `<br>` tags) to make it look more professional.
 
------
 
 # QUEUECTL (Node.js Version)
 
