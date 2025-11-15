@@ -168,4 +168,4 @@ You can manually test the entire job lifecycle.
 
 For questions or support, please connect with me:
 
-  * [Raj Srivastava](https://www.google.com/search?q=httpss://github.com/Rajs1235) (GitHub)
+  * [Raj Srivastava](https://github.com/Rajs1235) (GitHub)
