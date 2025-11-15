@@ -121,51 +121,45 @@ Run the Application All commands are run from the terminal using node queuectl.j
 Bash
 
 # Check if the connection is working
-node queuectl.js status
+node queuectl.js status<Br>
 🧪 Testing Flow
 You can manually test the entire job lifecycle.
 
 Check Status (should be empty):
 
 Bash
-
-node queuectl.js status
+<br>
+node queuectl.js status<br>
 Start a Worker:
-
+<br>
 Bash
 
-node queuectl.js worker start --count 1
+node queuectl.js worker start --count 1<br>
 Enqueue a Successful Job (Windows cmd.exe syntax):
-
+<br>
 Bash
-
+<br>
 node queuectl.js enqueue "{\"id\":\"job-ok\",\"command\":\"echo This will succeed\"}"
-Enqueue a Failing Job:
-
+Enqueue a Failing Job:<br>
+<br>
 Bash
-
+<br>
 node queuectl.js enqueue "{\"id\":\"job-fail\",\"command\":\"exit 1\"}"
 Wait 20-30 seconds for the worker to process both jobs (including all retries for the failing one).
-
+<br>
 Verify Success:
-
-Bash
-
-node queuectl.js list --state completed
+<br>
+Bash node queuectl.js list --state completed
 (Should show job-ok)
-
+<br>
 Verify Failure (DLQ):
-
-Bash
-
-node queuectl.js dlq list
+<br>
+Bash node queuectl.js dlq list
 (Should show job-fail)
-
+<br>
 Stop the Worker:
-
-Bash
-
-node queuectl.js worker stop
+<br>
+Bash node queuectl.js worker stop
 Contact
 For questions or support, please connect with me:
 
