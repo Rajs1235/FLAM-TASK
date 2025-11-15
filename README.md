@@ -1,6 +1,6 @@
 # QUEUECTL (Node.js Version)
 # Overview
-queuectl is a comprehensive, CLI-based background job queue system designed to manage a distributed task pipeline. The system is built with a powerful Node.js backend and MongoDB for persistent storage.
+QUEUECTL is a comprehensive, CLI-based background job queue system designed to manage a distributed task pipeline. The system is built with a powerful Node.js backend and MongoDB for persistent storage.
 
 It's a minimal, production-grade system that supports enqueuing jobs, running multiple concurrent worker processes, handling automatic retries with exponential backoff, and maintaining a Dead Letter Queue (DLQ) for permanently failed jobs.
 
@@ -38,7 +38,7 @@ config set: Set global configurations, like default_max_retries.
 # Technology Stack & Architecture
 The application is architected with a modern Node.js backend designed for a CLI environment.
 
-# Backend (CLI & Workers):
+# ✔️ Backend (CLI & Workers):
 
 The core application is built with Node.js.
 
@@ -50,13 +50,13 @@ fs-extra is used to manage a .pids file, allowing the stop command to know which
 
 The CLI logic is organized into controllers/commandController.js for clear separation of concerns.
 
-# Database:
+# 📦 Database:
 
 MongoDB serves as the persistent, central datastore for all jobs.
 
 Mongoose is used as the Object Data Modeler (ODM) to define schemas (Job.js, Config.js) and interact with the database.
 
-# Core Architecture:
+# 🛒 Core Architecture:
 
 queuectl.js: The main CLI entry point. It parses commands and routes them to the controller.
 
@@ -68,7 +68,7 @@ models/: Defines the Mongoose schemas for Job and Config.
 
 lib/worker.js: A standalone script that runs as a separate, background process. It polls MongoDB for work, executes jobs atomically using child_process.spawn, and handles the complete retry/backoff/DLQ logic.
 
-# Robustness & Design
+# 📝 Robustness & Design
 The application is built with a strong emphasis on robustness and correctness.
 
 # Concurrency Control:
@@ -81,22 +81,10 @@ Workers are launched as detached background processes. Their Process IDs (PIDs) 
 
 The worker stop command reads this file and sends a SIGTERM signal to each PID, allowing for a graceful shutdown. This is a simple file-based solution suitable for a single-machine deployment.
 
-# Secure Credentials Management:
+# 🔒Secure Credentials Management:
 
 All sensitive credentials (like the MONGO_URI) are managed via environment variables and loaded securely using the dotenv package. They are never hard-coded.
 
-Screenshots
-node queuectl.js status (Empty Queue) !(path/to/status-empty.png)
-
-node queuectl.js worker start !(path/to/worker-start.png)
-
-node queuectl.js enqueue !(path/to/enqueue.png)
-
-node queuectl.js list --state completed !(path/to/list-completed.png)
-
-node queuectl.js dlq list (Showing a failed job) !(path/to/dlq-list.png)
-
-node queuectl.js worker stop !(path/to/worker-stop.png)
 
 # Local Installation & Setup
 Prerequisites
