@@ -1,115 +1,82 @@
-# QueueCTL - A Node.js & MongoDB Background Job Queue
-A minimal, production-grade CLI tool for managing background jobs. It supports concurrent workers, persistent job storage (MongoDB), automatic retries with exponential backoff, and a Dead Letter Queue (DLQ) for failed jobs. This was created as a backend developer internship assignment.
+# QUEUECTL : A Node.js & MongoDB CLI Job Queue
+This is a CLI-based background job queue system built with Node.js and MongoDB for a backend developer internship assignment.
 
-# 🚀 Tech Stack
-Core: Node.js
+It's a minimal, production-grade system that manages background jobs with concurrent worker processes, handles automatic retries using exponential backoff, and maintains a Dead Letter Queue (DLQ) for permanently failed jobs.
 
-# Database: MongoDB (with Mongoose)
-
-# CLI Framework: commander
-
-# Process Management: child_process.fork
-
-# Utilities: dotenv, chalk, fs-extra
-
+# 💻 Tech Stack
+Category	Technologies
+Core	<img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js"/> <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js"/>
+Database	<img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB"/> <img src="https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white" alt="Mongoose"/>
+Tools & CLI	<img src="https://img.shields.io/badge/Commander.js-000000?style=for-the-badge&logo=npm&logoColor=white" alt="Commander.js"/> <img src="https://img.shields.io/badge/fs--extra-1572B6?style=for-the-badge&logo=files&logoColor=white" alt="fs-extra"/> <img src="https://img.shields.io/badge/dotenv-ECD53F?style=for-the-badge&logo=dotenv&logoColor=black" alt="dotenv"/>
 # ✨ Key Features
-# Persistent Jobs: All jobs are stored in MongoDB.
+Persistent Job Storage: All jobs are stored in MongoDB.
 
-# Concurrent Workers: Run multiple worker processes in parallel.
+Concurrent Worker Processes: Run multiple, parallel workers using child_process.fork.
 
-# Atomic Operations: Prevents duplicate job processing (race conditions) using atomic findOneAndUpdate.
+Atomic Job Locking: Prevents race conditions and duplicate job processing using atomic findOneAndUpdate operations.
 
-# Retry & Backoff: Automatically retries failed jobs with an exponential backoff (delay = base ^ attempts).
+Exponential Backoff: Automatically retries failed jobs with a delay of base ^ attempts seconds.
 
-# Dead Letter Queue (DLQ): Jobs that exhaust all retries are moved to a dead state.
+Dead Letter Queue (DLQ): Failed jobs are moved to a dead state after exhausting all retries.
 
-# Graceful Shutdown: Workers catch SIGTERM signals to finish their current job before exiting.
+Graceful Shutdown: Workers listen for SIGTERM to finish their current job before exiting.
 
-# Configurable: Manage settings like retry counts via the CLI.
+Bonus Web Dashboard: Includes an optional Express.js API (index.js/app.js) for a monitoring dashboard.
 
-# Bonus: Scheduled Jobs: Supports a run_at field during enqueue for scheduled jobs.
+# 🚀 How to Run Locally
+Prerequisites:
 
-# Bonus: Web Dashboard: Includes an optional Express.js API (in app.js and index.js) for a web-based monitoring dashboard.
-
-# ⚙️ Setup Instructions
-Follow these steps to get queuectl running on your local machine.
-
-1. Prerequisites
 Node.js (v16+ recommended)
 
 MongoDB (A running instance, e.g., MongoDB Atlas or local mongodb://127.0.0.1)
 
-2. Clone the repository
+Clone the repository:
+
 Bash
 
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
-3. Install dependencies
+git clone https://github.com/Rajs1235/FLAM-TASK.git
+cd FLAM-TASK
+Install dependencies:
+
 Bash
 
 npm install
-4. Set up Environment Variables
+Set up Environment Variables:
+
 Create a .env file in the root directory.
 
-Add your MongoDB connection string to it:
+Add your MongoDB connection string:
 
 Code snippet
 
 MONGO_URI="mongodb+srv://<user>:<password>@your-cluster.mongodb.net/queuectl"
-5. How to Run Commands
+Run the Application:
+
 All commands are run from the terminal using node queuectl.js <command>.
 
-# 💻 Usage Examples (CLI Commands)
-Enqueue a Job
-Note: Windows Command Prompt (cmd.exe) requires escaping the double quotes.
+# 💻 CLI Commands
+Category	Command	Description
+Enqueue	node queuectl.js enqueue "..."	Add a new job to the queue.
+Workers	node queuectl.js worker start --count 3	Start one or more background workers.
+Workers	node queuectl.js worker stop	Stop all running workers gracefully.
+Status	node queuectl.js status	Show summary of all job states & active workers.
+List Jobs	node queuectl.js list --state pending	List jobs by state (pending, completed, etc.)
+DLQ	node queuectl.js dlq list	View all jobs in the Dead Letter Queue.
+DLQ	node queuectl.js dlq retry <job-id>	Retry a specific job from the DLQ.
+Config	node queuectl.js config set <key> <value>	Manage configuration (e.g., default_max_retries 5).
+
+Export to Sheets
+
+Note on Windows (cmd.exe): You must escape the double quotes inside the JSON string.
 
 Bash
 
+# Correct syntax for Windows Command Prompt:
 node queuectl.js enqueue "{\"id\":\"job1\",\"command\":\"echo Hello\"}"
-Manage Workers
-Bash
-
-# Start 3 workers in the background
-node queuectl.js worker start --count 3
-
-# Stop all running workers
-node queuectl.js worker stop
-Check Status
-Bash
-
-node queuectl.js status
-List Jobs by State
-Bash
-
-node queuectl.js list --state pending
-node queuectl.js list --state completed
-Manage the DLQ
-Bash
-
-# List all failed jobs
-node queuectl.js dlq list
-
-# Retry a specific failed job
-node queuectl.js dlq retry job1
-Manage Configuration
-Bash
-
-node queuectl.js config set default_max_retries 5
-🏗️ Architecture Overview
-queuectl.js: The main CLI entry point, using commander to parse commands and route them to the controller.
-
-controllers/: Contains all the business logic for each CLI command. It's responsible for interacting with the database and managing worker processes.
-
-models/ & db/: Defines the Mongoose schemas (Job, Config) and manages the database connection pool.
-
-lib/worker.js: A standalone script that runs as a separate, background process. It polls the database for work, executes jobs atomically, and handles the complete retry/backoff/DLQ logic.
-
-Job Lifecycle: pending ➔ processing ➔ completed (on success) OR failed (on error). After max retries, failed ➔ dead.
-
-🧪 Testing Instructions
+🧪 Test Flow
 You can manually test the entire job lifecycle.
 
-Check Status: (Should be empty)
+Check Status (should be empty):
 
 Bash
 
@@ -150,9 +117,5 @@ Stop the Worker:
 Bash
 
 node queuectl.js worker stop
-💡 Assumptions & Trade-offs
-Process Management: Workers are launched as detached background processes. Their PIDs are stored in a local .pids file for the stop command. This is simple but not robust enough for a multi-machine setup (which would require a shared store like Redis).
-
-Command Execution: The command string is executed with shell: true, which is powerful but requires trusting the input.
-
-CLI Execution: The recommended way to run the tool is node queuectl.js <command> to avoid any system path/npm link issues.
+# 📫 Author: Raj Srivastava
+<p align="left"> <a href="mailto:raj25oct2003@gmail.com" target="_blank"> <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/> </a> <a href="https://www.linkedin.com/in/raj-srivastava-a7337322a/" target="_blank"> <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/> </a> <a href="https://github.com/Rajs1235" target="_blank"> <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/> </a> </p>
