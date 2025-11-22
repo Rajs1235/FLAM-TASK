@@ -7,8 +7,7 @@ const chalk = require('chalk');
 // We are now requiring your exact filenames
 const Job = require('../models/Job.js');
 const Config = require('../models/Configdata.model.js');
-const { connectDB, disconnectDB } = require('../db/index.js'); // Assuming db.js is in models
-
+const { connectDB, disconnectDB } = require('../db/index.js'); 
 const PID_FILE = path.join(__dirname, '..', '.pids');
 
 const getConfig = async () => {
